@@ -1,4 +1,4 @@
-# **Tokens of the language**
+# **Tokens of Quark 0.1**
 
 -----
 
@@ -32,7 +32,8 @@
 | **integer**      | **Constant integer**         |
 | :-               | :-                  |
 | **real**         | **Constant real**            |
-| **const string** | **Constant string** |
+| **string** | **Constant string** |
+| **char** | **Constant string** |
 | **identifier**   | **Identifier**      |
 
 -----
@@ -47,6 +48,12 @@
 -----
 
 ## **Primitive data types**
+
+### **String data types**
+
+| **cstring** | **Contant string of chars** |
+| :-          | :-                          |
+| **string**  | **String of chars**         |
 
 ### **Integer data types**
 
@@ -86,21 +93,10 @@
 | **+**  | **Plus**            |
 | :-     | :-                  |
 | **-**  | **Minus**           |
+| **=**       | **Equal**                |
 | **/**  | **Slash**           |
 | **\*** | **Asterisk**        |
 | **%**  | **Percentage**      |
-| **&**  | **Ampersand**       |
-| **\|** | **Pipe**            |
-| **<<** | **Less less**       |
-| **>>** | **Greater greater** |
-
-### **Arithmetic Unary Operators**
-
-| **++**  | **Plus plus**         |
-| :-      | :-                    |
-| **--**  | **Minus minus**       |
-| **~**   | **Tilde**             |
-| **^**   | **Circumflex accent** |
 
 ### **Boolean Binary Operators**
 
@@ -124,10 +120,12 @@
 
 | **->**      | **Arrow**                |
 | :-          | :-                       |
-| **=**       | **Equal**                |
+| **.**       | **Dot**                  |
+| **var**     | **Variable decl**        |
+| **fn**     | **Variable decl**        |
 | **:=**      | **Doubled dotted equal** |
 | **:**       | **Double dot**           |
-| **.**       | **Dot**                  |
+| **,**       | **Comma**                |
 | **;**       | **Semicolon**            |
 | **{**       | **Left key brace**       |
 | **}**       | **Right key brace**      |
