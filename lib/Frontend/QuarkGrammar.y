@@ -1,4 +1,70 @@
 %require "3.5.1"
+%language "C++"
+
+%skeleton "lalr1.cc"
+
+/// Ask bison to add location tracking for us
+%locations
+/// Ask bison to generate position/location code into separated file
+/// %define api.location.file "SourceLoc.h"
+
+/// Add prefix to all symbols
+/// %define api.symbol.prefix {S_}
+/// Add prefix to all tokens
+%define api.token.prefix {TK_}
+
+/// Automove all semantic values of actions
+/// %define api.value.automove
+
+/// Define objects inside namespace quark
+%define api.namespace {quark}
+
+/// Tell bison to change parser name to QuarkParser
+%define api.parser.class {QuarkParser}
+
+/// Ask bison to use variants insted of union (safer and easier to use)
+%define api.value.type variant
+/// When used along with '%define api.value.type variant' Bison modifies
+/// what it expects for yylex and generates several handy constructors for each
+/// token
+%define api.token.constructor
+
+/// If used along with '%define api.value.type variant', RTTI is needed, so
+/// do not disable it
+%define parse.assert
+%define parse.error verbose
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+//                          REQUIRD CODE STARTS HERE                          //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+
+%code requires
+{
+#include <map>
+#include <string>
+#include <vector>
+#include <list>
+#include <iostream>
+
+#include <quark/Frontend/Decl.h>
+#include <quark/Frontend/Expr.h>
+#include <quark/Frontend/Stmt.h>
+#include <quark/Frontend/Type.h>
+
+
+#include <llvm/ADT/SmallString.h>
+
+} // %code requires
+
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+//                        TOKEN DEFINITION STARTS HERE                        //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
 
 %token  END 0 ENDL "\n"
 %token  MODULE EXPORT IMPORT
@@ -33,6 +99,13 @@
 
 // Dangling ELSE
 %right ELSIF ELSE
+
+// Token types
+%type<long long> INTEGER;
+%type<long double> REAL
+%type<llvm::SmallString<40>> STRING
+%type<char> CHAR
+%type<llvm::SmallString<40>> ID
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -92,11 +165,11 @@ Stmt: FOR "(" Local_var_decl ";" Expr ";" Expr ")" Stmt
     | IF "(" Expr ")" Stmt List_of_elsif
     | IF "(" Expr ")" Stmt List_of_elsif ELSE Stmt
     | WHILE "(" Expr ")" Stmt
-    | RET Expr ENDL
-    | DEFER Expr ENDL
-    | DEALLOC Expr ENDL
-    | Expr ENDL
-    | Local_var_decl ENDL
+    | RET Expr ";"
+    | DEFER Expr ";"
+    | DEALLOC Expr ";"
+    | Expr ";"
+    | Local_var_decl ";"
     | Block;
 
 Local_var_decl: VAR List_of_qualifiers ID ":" ID "=" Expr
@@ -133,12 +206,12 @@ Expr: "(" Expr ")"
     | "&" Expr
     | Func_call
     | Method_call
-    | ALLOC ID
-    | ALLOC ID "[" Expr "]"
+//    | ALLOC ID
+//    | ALLOC ID "[" Expr "]"
     | Term;
 
 Term: ID
-    | ID "[" Expr "]"
+//    | ID "[" Expr "]"
     | Literal;
 
 Func_call: ID "(" List_of_expr ")";
