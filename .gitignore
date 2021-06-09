@@ -1,0 +1,14 @@
+# Build folders
+build/**
+
+# Vim files
+*.swp
+
+# VS Code files
+.vscode/**
+
+# Linter and autocompletion stuff
+compile_commands.json
+.clangd/**
+.cache/**
+
