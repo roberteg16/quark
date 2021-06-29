@@ -1,56 +1,25 @@
-#include <llvm-12/llvm/Support/Debug.h>
+#include "quark/Frontend/ASTDumper.h"
 #include <quark/Frontend/SourceModule.h>
 
+#include <quark/Frontend/ASTDumper.h>
 #include <quark/Frontend/Decl.h>
 #include <quark/Frontend/Stmt.h>
 #include <quark/Frontend/Type.h>
 
+#include <llvm/Support/Debug.h>
+
 using namespace quark;
 
-SourceModule::SourceModule() {
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::i8));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::u8));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::i16));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::u16));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::i32));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::u32));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::i64));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::u64));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::f32));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::f64));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::f80));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::i128));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::u128));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::u256));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::i256));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::i512));
-  TypesMap.push_back(std::make_unique<BuiltinType>(BuiltinTypeKind::u512));
+const BuiltinType SourceModule::BuiltinTypes[18] = {
+    {BuiltinTypeKind::Void}, {BuiltinTypeKind::i8},   {BuiltinTypeKind::u8},
+    {BuiltinTypeKind::i16},  {BuiltinTypeKind::u16},  {BuiltinTypeKind::i32},
+    {BuiltinTypeKind::u32},  {BuiltinTypeKind::i64},  {BuiltinTypeKind::u64},
+    {BuiltinTypeKind::f32},  {BuiltinTypeKind::f64},  {BuiltinTypeKind::f80},
+    {BuiltinTypeKind::i128}, {BuiltinTypeKind::u128}, {BuiltinTypeKind::u256},
+    {BuiltinTypeKind::i256}, {BuiltinTypeKind::i512}, {BuiltinTypeKind::u512}};
+
+void SourceModule::print(llvm::raw_ostream &out) const {
+  ASTDumper{out}.dump(*this);
 }
 
-SourceModule::~SourceModule() {}
-
-void SourceModule::print(llvm::raw_ostream &out) {
-  out << "=SourceModule=\n\n";
-
-  llvm::dbgs() << "=TYPES=\n";
-  for (const auto& type : TypesMap) {
-    llvm::dbgs() << "  ";
-    type->dump();
-    llvm::dbgs() << "\n";
-  }
-
-  for (const auto& imported : ImportedModules) {
-    llvm::dbgs() << imported << "\n";
-  }
-
-  for (const auto& decl : FunctionDeclarations) {
-    decl->dump();
-    llvm::dbgs() << "\n";
-  }
-
-  llvm::dbgs() << "\n===END===\n";;
-}
-
-void SourceModule::dump() {
-  print(llvm::dbgs());
-}
+void SourceModule::dump() const { print(llvm::dbgs()); }

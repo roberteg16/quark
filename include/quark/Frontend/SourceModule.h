@@ -1,26 +1,43 @@
 #ifndef __QUARK_FRONTEND_SOURCEMODULE_H__
 #define __QUARK_FRONTEND_SOURCEMODULE_H__
 
+#include <quark/Frontend/Decl.h>
+#include <quark/Frontend/Type.h>
+
+#include <llvm/ADT/ArrayRef.h>
+#include <llvm/ADT/SmallString.h>
 #include <llvm/ADT/SmallVector.h>
+#include <llvm/ADT/StringRef.h>
 #include <llvm/Support/raw_ostream.h>
+
+#include <deque>
 
 namespace quark {
 
-struct Type;
-struct Decl;
-
 class SourceModule {
 public:
-  SourceModule();
-  ~SourceModule();
+  SourceModule() = default;
+  ~SourceModule() = default;
+  SourceModule(SourceModule &&) = default;
+  SourceModule &operator=(SourceModule &&) = default;
+  SourceModule(const SourceModule &) = delete;
+  SourceModule &operator=(const SourceModule &) = delete;
 
-  void print(llvm::raw_ostream &);
-  void dump();
+  void print(llvm::raw_ostream &) const;
+  void dump() const;
 
-private:
-  llvm::SmallVector<std::string, 10> ImportedModules;
-  llvm::SmallVector<std::unique_ptr<Type>, 20> TypesMap;
-  llvm::SmallVector<std::unique_ptr<Decl>, 20> FunctionDeclarations;
+public:
+  /// Exported module
+  llvm::SmallString<10> ExportedModule;
+
+  /// Imported module
+  llvm::SmallVector<llvm::SmallString<10>, 10> ImportedModules;
+
+  /// Declarations
+  std::deque<std::unique_ptr<Decl>> Declarations;
+
+  /// Builtin types
+  static const BuiltinType BuiltinTypes[18];
 };
 
 } // namespace quark
