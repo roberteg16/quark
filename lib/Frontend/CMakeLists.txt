@@ -23,6 +23,7 @@ add_library(QuarkFrontend
   Type.cpp
   LexContext.cpp
   SourceModule.cpp
+  ASTDumper.cpp
   ParserUtils.cpp
   ${BISON_QuarkParser_OUTPUTS}
   ${FLEX_QuarkLexer_OUTPUTS}
