@@ -26,3 +26,7 @@ add_library(QuarkFrontend
   ${BISON_QuarkParser_OUTPUTS}
   ${FLEX_QuarkLexer_OUTPUTS}
 )
+
+target_link_libraries(QuarkFrontend
+  QuarkSupport
+)
