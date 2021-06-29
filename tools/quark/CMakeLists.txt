@@ -6,4 +6,4 @@ target_link_libraries(quark
     QuarkFrontend
 )
 
-target_link_libraries(quark ${llvm_libs})
+target_link_libraries(quark ${llvm_libs} ${FLEX_LIBRARIES})
